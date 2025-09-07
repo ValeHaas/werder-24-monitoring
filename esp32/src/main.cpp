@@ -46,7 +46,7 @@ void setup()
   // Notify API of startup
   if (WiFi.status() == WL_CONNECTED)
   {
-    http.begin("https://werder-24.de/monitoring/ug/rohrbruch/startup?auth_token=" + (String)AUTH_TOKEN);
+    http.begin("https://monitoring.werder-24.de/ug/rohrbruch/startup?auth_token=" + (String)AUTH_TOKEN);
     int httpResponseCode = http.GET();
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
@@ -79,7 +79,7 @@ void loop()
     // Send HTTP request to API endpoint
     if (WiFi.status() == WL_CONNECTED)
     {
-      http.begin("https://werder-24.de/monitoring/ug/rohrbruch/alarm?auth_token=" + (String)AUTH_TOKEN);
+      http.begin("https://monitoring.werder-24.de/ug/rohrbruch/alarm?auth_token=" + (String)AUTH_TOKEN);
       int httpResponseCode = http.GET();
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);

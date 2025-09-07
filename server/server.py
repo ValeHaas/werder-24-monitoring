@@ -56,7 +56,7 @@ async def health_check():
     return {"status": "healthy"}
 
 
-@app.get("/monitoring/ug/rohrbruch/startup")
+@app.get("/ug/rohrbruch/startup")
 async def startup(auth_token: str):
     if auth_token != settings.SERVER_AUTH_TOKEN.get_secret_value():
         logger.warning("Unauthorized access attempt")
@@ -80,7 +80,7 @@ Bleiben Sie trocken!""",
     return {"message": "Server started"}
 
 
-@app.get("/monitoring/ug/rohrbruch/alarm")
+@app.get("/ug/rohrbruch/alarm")
 async def alarm(auth_token: str):
     if auth_token != settings.SERVER_AUTH_TOKEN.get_secret_value():
         logger.warning("Unauthorized access attempt")
