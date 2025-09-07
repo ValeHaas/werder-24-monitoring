@@ -1,36 +1,54 @@
 # FastAPI server for monitoring water leakage
 
-from fastapi import FastAPI, logger
-from pydantic import BaseModel, SecretStr
+from fastapi import FastAPI
+from pydantic import BaseModel, SecretStr, field_validator
 from pydantic_settings import BaseSettings
 import telegram
 from telegram import Bot
 from telegram.error import TelegramError
+from pathlib import Path
+from typing import List
+import logging
 
 
 # Constants
-CONFIG_FILE = "server.env"
+logger = logging.getLogger("uvicorn")
+CONFIG_FILE = Path(__file__).parent / "server.env"
 
 
 # Load environment variables from .env file
 class Settings(BaseSettings):
     TELEGRAM_API_KEY: SecretStr
-    TELEGRAM_CHAT_IDS: str  # Semicolon-separated list of chat IDs
+    TELEGRAM_CHAT_IDS: List[int]  # Semicolon-separated list of chat IDs
 
     class Config:
         env_file = CONFIG_FILE
+
+    @field_validator("TELEGRAM_CHAT_IDS", mode="before")
+    @classmethod
+    def validate_telegram_chat_ids(cls, v):
+        if isinstance(v, str):
+            return [int(chat_id) for chat_id in v.split(";") if chat_id.isdigit()]
+        elif isinstance(v, list):
+            return [
+                int(chat_id)
+                for chat_id in v
+                if isinstance(chat_id, str) and chat_id.isdigit()
+            ]
+        elif isinstance(v, int):
+            return [v]
+        return v
 
 
 settings = Settings()
 app = FastAPI()
 bot = Bot(token=settings.TELEGRAM_API_KEY.get_secret_value())
-chat_ids = [int(chat_id) for chat_id in settings.TELEGRAM_CHAT_IDS.split(";")]
-logger.setLevel("INFO")
+chat_ids = settings.TELEGRAM_CHAT_IDS
 logger.info(f"Loaded chat IDs: {", ".join(map(str, chat_ids))}")
 logger.info("Telegram bot initialized")
 
 
-@app.route("/monitoring/ug/rohrbruch/startup")
+@app.get("/monitoring/ug/rohrbruch/startup")
 async def startup():
     logger.info("Server started")
     # Send a message to all chat IDs
@@ -50,7 +68,7 @@ Bleiben Sie trocken!""",
     return {"message": "Server started"}
 
 
-@app.route("/monitoring/ug/rohrbruch/alarm")
+@app.get("/monitoring/ug/rohrbruch/alarm")
 async def alarm():
     logger.warning("Water alarm triggered!")
     # Send a message to all chat IDs
