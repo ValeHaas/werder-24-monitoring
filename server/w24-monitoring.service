@@ -1,0 +1,14 @@
+[Unit]
+Description=Monitoring Service for Water Leak Detection
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/werder24-monitoring/repo/server
+ExecStartPre=bash create_venv.sh
+ExecStart=/opt/hag_connect/repo/venv/bin/python3 run.py
+Restart=always
+StartLimitIntervalSec=10
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target
