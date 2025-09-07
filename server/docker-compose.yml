@@ -1,0 +1,21 @@
+services:
+  monitoring-server:
+    container_name: monitoring-server
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - nginx-pm
+    ports:
+      - "8000:8000"
+    environment:
+      - TELEGRAM_API_KEY=${TELEGRAM_API_KEY}
+      - TELEGRAM_CHAT_IDS=${TELEGRAM_CHAT_IDS}
+      - SERVER_AUTH_TOKEN=${SERVER_AUTH_TOKEN}
+    command: >
+      sh -c "uvicorn server:app --host 0.0.0.0 --port 8000"
+
+networks:
+  nginx-pm:
+    external: true

@@ -51,6 +51,11 @@ logger.info(f"Loaded chat IDs: {id_strings}")
 logger.info("Telegram bot initialized")
 
 
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+
 @app.get("/monitoring/ug/rohrbruch/startup")
 async def startup(auth_token: str):
     if auth_token != settings.SERVER_AUTH_TOKEN.get_secret_value():
