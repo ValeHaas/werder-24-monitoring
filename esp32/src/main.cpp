@@ -9,6 +9,7 @@
 
 #define WIFI_SSID "GP7 VLH"                // replace with your WiFi SSID
 #define WIFI_PASSWORD "WerDasLiestIstDoof" // replace with your WiFi password
+#define AUTH_TOKEN "lkjbandcQWEfc3"        // Token for authenticating requests
 
 // HT_st7735 st7735;
 
@@ -45,7 +46,7 @@ void setup()
   // Notify API of startup
   if (WiFi.status() == WL_CONNECTED)
   {
-    http.begin("https://werder-24.de/monitoring/ug/rohrbruch/startup");
+    http.begin("https://werder-24.de/monitoring/ug/rohrbruch/startup?auth_token=" + (String)AUTH_TOKEN);
     int httpResponseCode = http.GET();
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
@@ -78,7 +79,7 @@ void loop()
     // Send HTTP request to API endpoint
     if (WiFi.status() == WL_CONNECTED)
     {
-      http.begin("https://werder-24.de/monitoring/ug/rohrbruch/alarm");
+      http.begin("https://werder-24.de/monitoring/ug/rohrbruch/alarm?auth_token=" + (String)AUTH_TOKEN);
       int httpResponseCode = http.GET();
       Serial.print("HTTP Response code: ");
       Serial.println(httpResponseCode);
