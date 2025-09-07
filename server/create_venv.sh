@@ -16,7 +16,7 @@ source ../venv/bin/activate
 pip install --upgrade pip
 
 # Install the required packages from requirements.txt
-pip install -r ../requirements.txt
+pip install -r requirements.txt
 
 # Deactivate the virtual environment
 deactivate

@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     TELEGRAM_API_KEY: SecretStr
     TELEGRAM_CHAT_IDS: List[int]  # Semicolon-separated list of chat IDs
 
+    SERVER_AUTH_TOKEN: SecretStr  # Token for authenticating requests
+
     class Config:
         env_file = CONFIG_FILE
 
@@ -49,7 +51,11 @@ logger.info("Telegram bot initialized")
 
 
 @app.get("/monitoring/ug/rohrbruch/startup")
-async def startup():
+async def startup(auth_token: str):
+    if auth_token != settings.SERVER_AUTH_TOKEN.get_secret_value():
+        logger.warning("Unauthorized access attempt")
+        return {"error": "Unauthorized"}, 401
+
     logger.info("Server started")
     # Send a message to all chat IDs
     for chat_id in chat_ids:
@@ -69,7 +75,11 @@ Bleiben Sie trocken!""",
 
 
 @app.get("/monitoring/ug/rohrbruch/alarm")
-async def alarm():
+async def alarm(auth_token: str):
+    if auth_token != settings.SERVER_AUTH_TOKEN.get_secret_value():
+        logger.warning("Unauthorized access attempt")
+        return {"error": "Unauthorized"}, 401
+
     logger.warning("Water alarm triggered!")
     # Send a message to all chat IDs
     for chat_id in chat_ids:
