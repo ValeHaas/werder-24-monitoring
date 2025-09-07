@@ -5,7 +5,7 @@ After=network.target
 [Service]
 WorkingDirectory=/opt/werder24-monitoring/repo/server
 ExecStartPre=bash create_venv.sh
-ExecStart=/opt/werder24-monitoring/repo/server/venv/bin/python3 -m fastapi run server:app
+ExecStart=/opt/werder24-monitoring/repo/server/venv/bin/python3 -m fastapi run server.py
 Restart=always
 StartLimitIntervalSec=10
 StartLimitBurst=3
