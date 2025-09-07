@@ -6,11 +6,11 @@
 
 # Check if the virtual environment directory exists
 if [ ! -d "venv" ]; then
-    python3 -m venv venv
+    python3 -m venv ./venv
 fi
 
 # Activate the virtual environment
-source venv/bin/activate
+source ./venv/bin/activate
 
 # Upgrade pip to the latest version
 pip install --upgrade pip
