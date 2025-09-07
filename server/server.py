@@ -46,7 +46,8 @@ settings = Settings()
 app = FastAPI()
 bot = Bot(token=settings.TELEGRAM_API_KEY.get_secret_value())
 chat_ids = settings.TELEGRAM_CHAT_IDS
-logger.info(f"Loaded chat IDs: {", ".join(map(str, chat_ids))}")
+id_strings = ", ".join(map(str, chat_ids))
+logger.info(f"Loaded chat IDs: {id_strings}")
 logger.info("Telegram bot initialized")
 
 
